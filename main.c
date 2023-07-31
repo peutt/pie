@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
         double midAngle = (angleDebut + angleFin) / 2.0;
         double rayonLabel;
         if(cos(midAngle * M_PI / 180)<0){
-            rayonLabel= diametre/1.6 + strlen(argv[i + 1])*(Taille_Label/1.6);
+            rayonLabel= diametre/1.6 + strlen(argv[i + 1])*(Taille_Label/1.2);
         } else {
             rayonLabel= diametre/1.6;
         }
@@ -78,14 +78,11 @@ int main(int argc, char *argv[]) {
         int xStart = x + diametre/2 * cos(midAngle * M_PI / 180);
         int yStart = y + diametre/2 * sin(midAngle * M_PI / 180);
         if(cos(midAngle * M_PI / 180)<0){
-            float increment=strlen(argv[i + 1])*(Taille_Label/1.3);
-            printf("sin: %f, cos: %f\n", sin(midAngle * M_PI / 180), cos(midAngle * M_PI / 180));
             if(sin(midAngle * M_PI / 180)>0){
-                gdImageLine(image, xStart, yStart, labelX+increment-sin(midAngle * M_PI / 180)*increment, labelY, noir);
+                gdImageLine(image, xStart, yStart, x + diametre/1.6 * cos(midAngle * M_PI / 180), labelY-Taille_Label, noir);
             } else {
-                gdImageLine(image, xStart, yStart, labelX+increment+sin(midAngle * M_PI / 180)*increment, labelY, noir);
-            }
-
+                gdImageLine(image, xStart, yStart, x + diametre/1.6 * cos(midAngle * M_PI / 180), labelY, noir);
+                   }
         } else {
             gdImageLine(image, xStart, yStart, labelX, labelY, noir);
         }
