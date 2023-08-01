@@ -14,15 +14,25 @@ int main(int argc, char *argv[]) {
     srand(time(NULL));
 
     // Verification du nombre d'arguments
-    if (argc < 4 || argc % 2 != 0) {
+    if (argc < 4) {
         printf("Usage: %s <nom_fichier.png> <pourcentage1> <label1> <pourcentage2> <label2> ... <pourcentageN> <labelN> [<couleur_fond>]\n", argv[0]);
         return 1;
     }
+
     const char *nomFichier = argv[1];
 
     // Cree une image avec la couleur de fond
     gdImagePtr image = gdImageCreate(Taille, Taille);
-    int couleurFond = gdImageColorAllocate(image, 0xFF, 0xFF, 0xFF);
+    int couleurFond;
+
+    // Vérifie si le paramètre optionnel pour la couleur de fond est présent
+    if (argc % 2 != 0){
+        unsigned long hexColor = strtoul(argv[argc-1], NULL, 16);
+        couleurFond = gdImageColorAllocate(image, (hexColor >> 16) & 0xFF, (hexColor >> 8) & 0xFF, hexColor & 0xFF);
+    } else {
+        // Couleur de fond par défaut : blanc
+        couleurFond = gdImageColorAllocate(image, 0xFF, 0xFF, 0xFF);
+    }
 
     // Remplir l'image avec la couleur de fond
     gdImageFill(image, 0, 0, couleurFond);
@@ -45,6 +55,9 @@ int main(int argc, char *argv[]) {
     int angleDebut = 0;
 
     for (int i = 2; i < argc; i += 2) {
+        if(i+1==argc && argc % 2 != 0){
+            break;
+        }
         // Dessine le secteur du camembert en couleur
         double pourcentage = atof(argv[i]);
         int couleur = gdImageColorAllocate(image, rand() % 256, rand() % 256, rand() % 256);
@@ -75,6 +88,7 @@ int main(int argc, char *argv[]) {
         int xTrait = x + diametre/1.6 * cos(midAngle * M_PI / 180);
 
         // Ecrit le label
+
         gdImageStringFT(image, NULL, gdImageColorAllocate(image, 0, 0, 0), "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", Taille_Label, 0, labelX, labelY, argv[i + 1]);
 
         // dessine le trait entre le label et le camembert
